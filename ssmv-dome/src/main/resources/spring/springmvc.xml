@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd ">
+        
+ 	<!-- 可以扫描controller、service、...这里让扫描controller，指定controller的包 -->
+	<context:component-scan base-package="com.fyx.controller"/>
+	
+	<!-- 注解支持 -->
+	<mvc:annotation-driven /> 
+	<!-- 对静态资源文件的访问  方案一 （二选一）  -->
+	<mvc:default-servlet-handler/> 
+	<!-- 对静态资源文件的访问  方案二 （二选一）  
+	<mvc:resources mapping="/images/**" location="/images/" cache-period="31556926"/>  
+	<mvc:resources mapping="/js/**" location="/js/" cache-period="31556926"/>  
+	<mvc:resources mapping="/css/**" location="/css/" cache-period="31556926"/> -->
+	
+	<!-- 资源映射 -->
+	<!-- <mvc:resources location="/WEB-INF/script/" mapping="/script/**"/> 
+	<mvc:resources location="/WEB-INF/script/js/" mapping="/script/js/**"/>
+	-->
+	
+	<!-- Velocity配置 -->
+    <bean id="velocityConfigurer"
+        class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <!-- 模板位置，即vm(html)文件的位置 -->
+        <property name="resourceLoaderPath" value="WEB-INF/views"></property>
+        <property name="velocityProperties">
+            <props>
+                <prop key="directive.foreach.counter.name">loopCounter</prop>
+                <prop key="directive.foreach.counter.initial.value">0</prop>
+                <prop key="input.encoding">UTF-8</prop><!-- 指定模板引擎进行模板处理的编码 -->
+                <prop key="output.encoding">UTF-8</prop><!-- 指定输出流的编码 -->
+            </props>
+        </property>
+    </bean>
+    
+    <!-- 视图解析器 -->
+    <bean id="viewResolver"
+        class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <!-- 以什么什么结尾，注意不需要跟jsp的视图解析器一样配置prefix,因为前缀和上面的velocityConfigurer配置的位置是一样的 -->
+        <property name="suffix" value=".html"></property>
+        <!-- 类型 -->
+        <property name="contentType" value="text/html;charset=UTF-8" />
+        <property name="dateToolAttribute" value="dateTool" />
+        <property name="numberToolAttribute" value="numberTool" />
+        <property name="exposeRequestAttributes" value="true" />
+        <property name="exposeSessionAttributes" value="true" />
+    </bean>
+	
+	
+	<!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 
+	<bean id="velocityCongfig"
+		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath">
+			<value>/</value>
+		</property>
+		<property name="velocityProperties">
+			<props>
+				<prop key="directive.set.null.allowed">true</prop>
+				<prop key="input.encoding">UTF-8</prop>
+				<prop key="output.encoding ">UTF-8</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.velocity.VelocityView" />
+		<property name="cache" value="true" />  
+        <property name="prefix" value="" /> 
+        <property name="suffix" value=".html" />
+		<property name="contentType">
+			<value>text/html;charset=UTF-8</value>
+		</property>
+	</bean>
+	-->
+	
+	<!--配置velocity engine默认路径
+	<bean id="velocityEngine"
+		class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="resourceLoaderPath" value="/velocity/"></property>
+	</bean>
+	-->
+	
+	<!-- 视图解析器 解析jsp解析，默认使用jstl标签，classpath下的得有jstl的包 
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	-->
+</beans>
